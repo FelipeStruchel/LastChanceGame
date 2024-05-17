@@ -1,7 +1,8 @@
 var inMenu = true
-var contadorDialogo = 0
+var contadorDialogo = 38
 var waiting = false
 var contadorLetras = 0
+var faseAtual = 0
 
 
 function mainMenu() {
@@ -15,14 +16,22 @@ function mainMenu() {
 }
 
 function start() {
-
-
+    faseAtual = 1
     function handleClickDialog() {
-        if (!waiting) {
-            avancaDialogo()
+        if (faseAtual === 1) {
+            if (!waiting) {
+                if (contadorDialogo === 39) {
+                    startSecondPhase()
+                } else {
+                    avancaDialogo()
+                }
+            } else {
+                waiting = false
+                contadorLetras = dialogs[contadorDialogo].length
+            }
         } else {
-            waiting = false
-            contadorLetras = dialogs[contadorDialogo].length
+            faseAtual = 2
+            dialogo.off('click')
         }
     }
     function animaTextoDialogo() {
@@ -32,7 +41,7 @@ function start() {
                 contadorLetras++
                 if (contadorLetras <= dialogs[contadorDialogo].length) {
                     animaTextoDialogo()
-                }else{
+                } else {
                     waiting = false
                     contadorLetras = 0
                     contadorDialogo++
@@ -60,17 +69,11 @@ function start() {
     inMenu = false
     $('#comecar').hide()
 
-    jogo = $('#jogo')
+    const jogo = $('#jogo')
 
-    jogo.append("<div id='player' class='player'></div>");
     jogo.append("<div id='dialogoDiv' class='dialogoDiv'></div>");
-    jogo.append("<div id='nave' class='nave'></div>");
-    jogo.append("<div id='vida' class='vida'></div>");
 
-    const player = $('#player')
     const dialogoDiv = $('#dialogoDiv')
-    const nave = $('#nave')
-    const vida = $('#vida')
 
     dialogoDiv.append("<div id='characterPortrait' class='characterPortrait'></div>")
     dialogoDiv.append("<div id='dialogo' class='dialogo'></div>")
@@ -89,4 +92,142 @@ function start() {
     characterName.html('Maria')
     avancaDialogo()
 
+    function startSecondPhase() {
+        let maxEnemies = 1
+        dialogoDiv.detach()
+        jogo.append("<div id='player' class='player'></div>");
+        jogo.append("<div id='vida' class='vida'></div>");
+        const player = $('#player')
+        const vida = $('#vida')
+
+        player.append("<div id='playerExhaust' class='playerExhaust'></div>")
+
+
+        const teclasPressionadas = {
+            w: false,
+            a: false,
+            s: false,
+            d: false,
+            space: false
+        }
+
+
+        $(document).on('keydown', function (e) {
+            switch (e.keyCode) {
+                case 87:
+                    teclasPressionadas.w = true
+                    break;
+                case 65:
+                    teclasPressionadas.a = true
+                    break;
+                case 83:
+                    teclasPressionadas.s = true
+                    break;
+                case 68:
+                    teclasPressionadas.d = true
+                    break;
+                case 32:
+                    teclasPressionadas.space = true
+                    break;
+                default:
+                    break;
+            }
+        })
+
+        $(document).on('keyup', function (e) {
+            switch (e.keyCode) {
+                case 87:
+                    teclasPressionadas.w = false
+                    break;
+                case 65:
+                    teclasPressionadas.a = false
+                    break;
+                case 83:
+                    teclasPressionadas.s = false
+                    break;
+                case 68:
+                    teclasPressionadas.d = false
+                    break;
+                case 32:
+                    teclasPressionadas.space = false
+                    break;
+                default:
+                    break;
+            }
+        })
+
+        function controleNave() {
+
+            const velocidadeMovimento = 8
+            const playerWidht = parseInt(player.css('width'))
+            const playerHeight = parseInt(player.css('height'))
+            const max = {
+                top: 0,
+                bottom: 500 - playerHeight,
+                left: 0,
+                right: 800 - playerWidht
+            }
+
+            if (teclasPressionadas.w) {
+                const currentTop = parseInt(player.css('top'))
+                if (currentTop - velocidadeMovimento >= max.top) {
+                    player.css('top', currentTop - velocidadeMovimento)
+                } else {
+                    player.css('top', max.top)
+                }
+            }
+            if (teclasPressionadas.s) {
+                const currentTop = parseInt(player.css('top'))
+                if (currentTop + velocidadeMovimento <= max.bottom) {
+                    player.css('top', currentTop + velocidadeMovimento)
+                } else {
+                    player.css('top', max.bottom)
+                }
+            }
+            if (teclasPressionadas.a) {
+                const currentLeft = parseInt(player.css('left'))
+                if (currentLeft - velocidadeMovimento >= max.left) {
+                    player.css('left', currentLeft - velocidadeMovimento)
+                } else {
+                    player.css('left', max.left)
+                }
+            }
+            if (teclasPressionadas.d) {
+                const currentLeft = parseInt(player.css('left'))
+                console.log(currentLeft)
+                if (currentLeft + velocidadeMovimento <= max.right) {
+                    player.css('left', currentLeft + velocidadeMovimento)
+                } else {
+                    player.css('left', max.right)
+                }
+            }
+
+        }
+
+        function criaInimigo() {
+            jogo.append("<div id='enemy1' class='enemy1'></div>")
+            const enemy = $('#enemy1')
+            enemy.css({
+                top: `${Math.random() * 500 > 500 ? 500 - enemy.height() : Math.random() * 500}px`,
+                left: `${800 - enemy.width()}px`
+            })
+            console.log(enemy.css('top'))
+            enemy.append("<div id='enemy1Exhaust' class='enemy1Exhaust'></div>")
+        }
+
+        function criaInimigos() {
+            const currentEnemies = $("#enemy1")
+            if (currentEnemies.length < maxEnemies) {
+                criaInimigo()
+            }
+        }
+
+        function secondPhase() {
+            controleNave()
+            criaInimigos()
+        }
+
+        setInterval(secondPhase, 30)
+
+    }
 }

@@ -119,3 +119,103 @@ body {
     user-select: none;
     white-space: no-wrap;
 }
+
+.player {
+    position: absolute;
+    top: 230px;
+    left: 200px;
+    background-image: url('../img/player/player.png');
+    background-position: 0% 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 100px;
+}
+
+.playerExhaust {
+    position: absolute;
+    height: 25px;
+    width: 50px;
+    left: -30px;
+    top: 12px;
+    background-repeat: no-repeat;
+    animation: playerExhaustAnimation 0.4s infinite;
+}
+
+.enemy1 {
+    transform: scaleX(-1);
+    position: absolute;
+    background-image: url('../img/enemy1/Ship2.png');
+    background-position: 0% 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 100px;
+    top: 0;
+    left: 0;
+}
+
+.enemy1Exhaust {
+    transform: scaleX(-1);
+    position: absolute;
+    height: 25px;
+    width: 50px;
+    left: -45px;
+    top: 8px;
+    background-repeat: no-repeat;
+    animation: enemy1ExhaustAnimation 0.4s infinite;
+}
+
+@keyframes playerExhaustAnimation {
+    0% {
+        background-image: url('../img/player/Exhaust/Normal_flight/Exhaust1/exhaust1.png');
+    }
+
+    25% {
+        background-image: url('../img/player/Exhaust/Normal_flight/Exhaust1/exhaust2.png');
+    }
+
+    50% {
+        background-image: url('../img/player/Exhaust/Normal_flight/Exhaust1/exhaust3.png');
+    }
+
+    100% {
+        background-image: url('../img/player/Exhaust/Normal_flight/Exhaust1/exhaust4.png');
+    }
+}
+
+@keyframes playerExhaustAnimationTurbo {
+    0% {
+        background-image: url('../img/player/Exhaust/Turbo_flight/Exhaust1/exhaust1.png');
+    }
+
+    25% {
+        background-image: url('../img/player/Exhaust/Turbo_flight/Exhaust1/exhaust2.png');
+    }
+
+    50% {
+        background-image: url('../img/player/Exhaust/Turbo_flight/Exhaust1/exhaust3.png');
+    }
+
+    100% {
+        background-image: url('../img/player/Exhaust/Turbo_flight/Exhaust1/exhaust4.png');
+    }
+}
+
+@keyframes enemy1ExhaustAnimation {
+    0% {
+        background-image: url('../img/enemy1/Exhaust/Normal_flight/Exhaust1/exhaust1.png');
+    }
+
+    25% {
+        background-image: url('../img/enemy1/Exhaust/Normal_flight/Exhaust1/exhaust2.png');
+    }
+
+    50% {
+        background-image: url('../img/enemy1/Exhaust/Normal_flight/Exhaust1/exhaust3.png');
+    }
+
+    100% {
+        background-image: url('../img/enemy1/Exhaust/Normal_flight/Exhaust1/exhaust4.png');
+    }
+}
