@@ -1,0 +1,121 @@
+@font-face {
+    font-family: "bubblegum";
+    src: url("bubblegum.TTF");
+}
+
+@font-face {
+    font-family: "optima-nova-black";
+    src: url("optima-nova-lt-black.otf");
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+}
+
+.fundo {
+    height: 100%;
+    width: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.jogo {
+    height: 500px;
+    width: 800px;
+    background-image: url('../img/cityRuins1.jpeg');
+    background-size: 120%;
+    background-repeat: no-repeat;
+    background-position-y: bottom;
+    background-position-x: center;
+    display: flex;
+    position: relative;
+}
+
+.comecar {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.comecar h1 {
+    font-family: bubblegum;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+    font-size: 100px;
+    position: fixed;
+    margin-bottom: 100px;
+}
+
+.comecar span {
+    font-family: optima-nova-black;
+    color: black;
+    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-width: 0.5px;
+    font-size: 40px;
+    margin-top: 200px;
+}
+
+.dialogoDiv {
+    height: 50%;
+    width: 100%;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+}
+
+.characterPortrait {
+    width: 25%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-position-y: bottom;
+}
+
+.dialogo {
+    width: 70%;
+    height: 100%;
+    background-image: url('../img/dialog.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position-y: bottom;
+    align-self: flex-end;
+}
+
+.characterName {
+    height: 20px;
+    width: 100px;
+    position: absolute;
+    top: 370px;
+    right: 428px;
+    transform: rotate(344deg);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-family: bubblegum;
+    user-select: none;
+}
+
+.textoDialogo {
+    color: white;
+    font-family: optima-nova-black;
+    text-align: left;
+    margin-top: 115px;
+    height: 50px;
+    width: 400px;
+    margin-left: 20px;
+    font-size: 15px;
+    user-select: none;
+    white-space: no-wrap;
+}
