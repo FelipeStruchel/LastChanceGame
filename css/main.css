@@ -33,6 +33,7 @@ body {
     background-position-x: center;
     display: flex;
     position: relative;
+    overflow: hidden;
 }
 
 .comecar {
@@ -130,6 +131,7 @@ body {
     background-repeat: no-repeat;
     height: 50px;
     width: 100px;
+    z-index: 1000;
 }
 
 .playerExhaust {
@@ -159,11 +161,158 @@ body {
     transform: scaleX(-1);
     position: absolute;
     height: 25px;
+    left: -40px;
+    bottom: 15px;
     width: 50px;
-    left: -45px;
-    top: 8px;
     background-repeat: no-repeat;
     animation: enemy1ExhaustAnimation 0.4s infinite;
+}
+
+.tiroPlayer {
+    position: absolute;
+    height: 25px;
+    width: 50px;
+    left: 0px;
+    top: 8px;
+    background-repeat: no-repeat;
+    background-position-x: left;
+    background-position-y: center;
+    animation: playerShootAnimation 0.5s forwards;
+}
+
+#vidaPlayer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 20px;
+    width: 33%;
+    background-color: #ff0000;
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+    transition: width 0.3s ease-in-out;
+    z-index: 999;
+}
+
+#vidaPlayer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to right, #ff0000 0%, #ff9900 50%, #99cc00 100%);
+    border-radius: 8px;
+    opacity: 0.3;
+    z-index: 999;
+}
+
+.playerExhaustTurbo {
+    position: absolute;
+    height: 25px;
+    width: 50px;
+    left: -35px;
+    top: 20px;
+    background-repeat: no-repeat;
+    animation: playerExhaustAnimationTurbo 0.4s infinite;
+}
+
+.contadorSegundos {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-family: optima-nova-black;
+    -webkit-text-stroke-color: rgb(255, 0, 0);
+    -webkit-text-stroke-width: 0.75px;
+    font-size: 30px;
+    user-select: none;
+    z-index: 999;
+}
+
+.explosao {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: explosao 1s forwards;
+    height: 100px;
+    width: 100px;
+}
+
+.gameOver {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('../img//gameOverWallpaper.jpg');
+    background-size: contain;
+    background-position: center;
+}   
+
+.gameOver h1 {
+    font-family: bubblegum;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+    font-size: 100px;
+}
+
+.gameOver div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-top: -50px;
+}
+
+.gameOver span {
+    font-family: optima-nova-black;
+    color: black;
+    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-width: 0.5px;
+    font-size: 40px;
+}
+
+.gameOver img {
+    height: 100px;
+    width: 100px;
+}
+
+.boss {
+    position: absolute;
+    background-image: url('../img/boss.png');
+    background-position: 0% 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 300px;
+    width: 300px;
+    top: 100px;
+    left: 250px;
+
+}
+
+.bossMissil {
+    position: absolute;
+    background-image: url('../img/boss/pngegg.png');
+    background-position: 0% 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+    top: 0px;
+    left: 0px;
+    transform: rotate(180deg);
+}
+
+@keyframes playerShootAnimation {
+    0% {
+        background-image: url('../img/player/Tiro/shot4_4.png');
+    }
+
+    100% {
+        background-image: url('../img/player/Tiro/shot4_5.png');
+    }
 }
 
 @keyframes playerExhaustAnimation {
@@ -217,5 +366,41 @@ body {
 
     100% {
         background-image: url('../img/enemy1/Exhaust/Normal_flight/Exhaust1/exhaust4.png');
+    }
+}
+
+@keyframes explosao {
+    0% {
+        background-image: url('../img/explosion/Explosion_1.png');
+    }
+    10% {
+        background-image: url('../img/explosion/Explosion_2.png');
+    }
+    20% {
+        background-image: url('../img/explosion/Explosion_3.png');
+    }
+    30% {
+        background-image: url('../img/explosion/Explosion_4.png');
+    }
+    40% {
+        background-image: url('../img/explosion/Explosion_5.png');
+    }
+    50% {
+        background-image: url('../img/explosion/Explosion_6.png');
+    }
+    60% {
+        background-image: url('../img/explosion/Explosion_7.png');
+    }
+    70% {
+        background-image: url('../img/explosion/Explosion_8.png');
+    }
+    80% {
+        background-image: url('../img/explosion/Explosion_9.png');
+    }
+    90% {
+        background-image: url('../img/explosion/Explosion_10.png');
+    }
+    100% {
+        background-image: url('../img/explosion/Explosion_10.png');
     }
 }
