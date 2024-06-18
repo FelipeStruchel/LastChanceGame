@@ -1,20 +1,20 @@
 var inMenu = true
-var contadorDialogo = 30
+var contadorDialogo = 0
 var waiting = false
 var contadorLetras = 0
 var faseAtual = 0
-var maxEnemies = 5
+var maxEnemies = 3
 var currentSpawnedEnemies = []
 var velocidadeMovimentoBase = 8
-var velocidadeInimigos = 5
+var velocidadeInimigos = 6
 var velocidadeTiro = 8
-var segundosParaCriarNovosInimigos = 2
+var segundosParaCriarNovosInimigos = 1
 var currentSpawnedTirosPlayer = []
 var alreadyShoot = false
 var shootsPerSecond = 4
 var vidaInimigo = 3
 var vidaPlayer = 100
-var tempoSegundaFase = 2
+var tempoSegundaFase = 60
 
 var intervals = []
 
@@ -29,12 +29,28 @@ function mainMenu() {
     }, 1000);
 }
 
+function playMusic(path, volume, repeat, remove) {
+    var audio = new Audio(path)
+    audio.volume = volume
+    audio.loop = repeat
+    audio.play()
+    if (remove) {
+        audio.onended = function () {
+            audio.remove()
+        }
+    }
+    return audio
+}
+
 function start() {
+    const dialogAudio = playMusic('./sons/Dialog.mp3', 0.05, true, false)
     faseAtual = 1
     function handleClickDialog() {
         if (faseAtual === 1) {
             if (!waiting) {
                 if (contadorDialogo === 39) {
+                    dialogAudio.pause()
+                    dialogAudio.remove()
                     startSecondPhase()
                 } else {
                     avancaDialogo()
@@ -131,11 +147,13 @@ function start() {
             'background-size': 'cover'
         })
 
+        playMusic('./sons/gameBGM.mp3', 0.1, true, false)
+
         const paralax = setInterval(() => {
             console.log('paralax pos')
             console.log(jogo.css('background-position-x'))
-            jogo.css('background-position-x', '-=2px')
-        }, 1000 / 60)
+            jogo.css('background-position-x', '-=1px')
+        }, 1000 / 240)
 
         const contador = setInterval(() => {
             contadorSegundos--;
@@ -174,6 +192,16 @@ function start() {
             shift: false
         }
 
+        const playerTurboSound = new Audio('./sons/turbo.mp3')
+
+        function playTurboSound() {
+            if (playerTurboSound.paused) {
+                playerTurboSound.currentTime = 0
+                playerTurboSound.volume = 0.1
+                playerTurboSound.loop = true
+                playerTurboSound.play()
+            }
+        }
 
         $(document).on('keydown', function (e) {
             switch (e.keyCode) {
@@ -218,6 +246,7 @@ function start() {
                     teclasPressionadas.space = false
                     break;
                 case 16:
+                    playerTurboSound.pause()
                     teclasPressionadas.shift = false
                     velocidadeMovimento /= 2
                     playerExhaust.removeClass('playerExhaustBoost').addClass('playerExhaust')
@@ -276,6 +305,7 @@ function start() {
                 atiraPlayer()
             }
             if (teclasPressionadas.shift) {
+                playTurboSound()
                 velocidadeMovimento = velocidadeMovimentoBase * 1.5
                 if (playerExhaust.hasClass('playerExhaust')) {
                     playerExhaust.removeClass('playerExhaust').addClass('playerExhaustTurbo')
@@ -326,6 +356,7 @@ function start() {
 
         function atiraPlayer() {
             if (!alreadyShoot) {
+                playMusic('./sons/tiro.mp3', 0.1, false, true)
                 const playerTiroId = Date.now()
                 alreadyShoot = true
                 const playerPos = player.offset();
@@ -343,10 +374,9 @@ function start() {
         }
 
         function moveTiroPlayer() {
-            const currentSpawnedTirosPlayerCopy = [...currentSpawnedTirosPlayer];
             const jogoWidth = jogo.width() + jogo.offset().left;
-            if (currentSpawnedTirosPlayerCopy.length > 0) {
-                currentSpawnedTirosPlayerCopy.map((tiro, idx) => {
+            if (currentSpawnedTirosPlayer.length > 0) {
+                currentSpawnedTirosPlayer.map((tiro, idx) => {
                     const currentLeft = parseInt(tiro.css('left'))
                     tiro.css({
                         left: `${currentLeft + velocidadeTiro}px`
@@ -367,8 +397,7 @@ function start() {
         }
 
         function handleTiroEnemyCollisions() {
-            const currentSpawnedTirosPlayerFreezed = [...currentSpawnedTirosPlayer]
-            currentSpawnedTirosPlayerFreezed.map(tiro => {
+            currentSpawnedTirosPlayer.map(tiro => {
                 return currentSpawnedEnemies.map(enemy => {
                     const collisions = $(tiro).collision(enemy.selector);
                     if (collisions.length > 0) {
@@ -420,6 +449,7 @@ function start() {
 
         function removeEnemyIfNoLife(enemy) {
             if (enemy.vida <= 0) {
+                playMusic('./sons/explosao.mp3', 0.1, false, true)
                 const enemyPosition = Object.assign({}, enemy.position());
                 enemy.remove()
                 currentSpawnedEnemies.splice(currentSpawnedEnemies.indexOf(enemy), 1);
@@ -485,7 +515,7 @@ function start() {
 
         jogo.append("<div id='contadorSegundos' class='contadorSegundos'></div>")
 
-        let contadorSegundos = 70;
+        let contadorSegundos = 120;
 
         const contador = setInterval(() => {
             contadorSegundos--;
@@ -498,7 +528,9 @@ function start() {
                 contadorElement.remove();
             }
             if (contadorSegundos === 0 && vidaPlayer > 0) {
-                // End Game
+                jogo.empty();
+                intervals.forEach(interval => clearInterval(interval));
+                jogo.append('<div class="youWin"><div>')
             }
         }, 1000);
 
@@ -577,14 +609,14 @@ function start() {
                         currentSpawnedBossTiros.splice(currentSpawnedBossTiros.indexOf(bossMissil), 1);
                     } else {
                         bossMissil.css({
-                            left: `${currentLeft - bossMissil.speed}px`
+                            left: `${currentLeft - bossMissilSpeed}px`
                         });
                     }
                 };
                 currentSpawnedBossTiros.push(bossMissil);
 
             } else {
-                if (currentSpawnedBossTiros < 3) {
+                if (currentSpawnedBossTiros < 4) {
                     const bossMissilId = `bossMissil_${Date.now()}`;
                     jogo.append(`<div id="${bossMissilId}" class="bossMissil"></div>`);
                     const bossMissil = $(`#${bossMissilId}`);
@@ -625,6 +657,7 @@ function start() {
                     const tempoLimite = setTimeout(() => {
                         const bossMissilPos = Object.assign({}, bossMissil.position());
                         currentSpawnedBossTiros.splice(currentSpawnedBossTiros.indexOf(bossMissil), 1);
+                        playMusic('./sons/explosao.mp3', 0.1, false, true)
                         bossMissil.remove();
                         const explosionId = Date.now()
                         const explosion = $(`<div class="explosao" id="${explosionId}"></div>`).css({
@@ -658,10 +691,11 @@ function start() {
             currentSpawnedBossTiros.forEach(tiro => {
                 const collisions = $(tiro).collision(player);
                 if (collisions.length > 0) {
-                    vidaPlayer -= 10;
+                    playMusic('./sons/explosao.mp3', 0.1, false, true)
                     tiro.removeTempoLimite();
                     tiro.remove();
                     currentSpawnedBossTiros.splice(currentSpawnedBossTiros.indexOf(tiro), 1);
+                    vidaPlayer -= 10;
                 }
             });
         }

@@ -1,5 +1,5 @@
 var dialogs = [
-    'Você veio... Para ser sincero não achei que viria',
+    'Você veio... Para ser sincera não achei que viria',
     'No fim você ainda se culpa por não ter conseguido salvar eles',
     '...',
     'Bom, eles não vão voltar a vida, mas talvez você tenha uma chance de se vingar',

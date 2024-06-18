@@ -279,6 +279,18 @@ body {
     width: 100px;
 }
 
+.youWin {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('../img/youWin.jpg');
+    background-size: contain;
+    background-position: center;
+}
+
 .boss {
     position: absolute;
     background-image: url('../img/boss.png');
